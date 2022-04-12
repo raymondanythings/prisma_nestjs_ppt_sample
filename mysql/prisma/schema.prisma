@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model member {
+  id   Int       @id @unique @default(autoincrement())
+  name String    @db.VarChar(20)
+  age  Int?
+  date DateTime? @default(now()) @db.DateTime(0)
+  post post[]
+}
+
+model post {
+  id      Int     @id @default(autoincrement())
+  content String  @db.MediumText
+  user_id Int?
+  member  member? @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
