@@ -1,0 +1,38 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  age      Int
+  email    String?
+  createAt DateTime @default(now())
+  Posts    Post[]
+  reply    Reple[]
+}
+
+model Post {
+  authorId  Int?
+  content   String?
+  id        Int     @id @default(autoincrement())
+  published Boolean @default(false)
+  title     String
+  User      User?   @relation(fields: [authorId], references: [id])
+  reply     Reple[]
+}
+
+model Reple {
+  id      Int    @id @default(autoincrement())
+  userId  Int?
+  User    User?  @relation(fields: [userId], references: [id])
+  postId  Int?
+  Post    Post?  @relation(fields: [postId], references: [id])
+  content String
+}

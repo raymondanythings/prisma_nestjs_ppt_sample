@@ -15,5 +15,15 @@ model User {
   name      String
   age       Int
   email     String?
+  post      Post[]
   createdAt DateTime @default(now())
+}
+
+model Post {
+  authorId  Int?
+  content   String?
+  id        Int     @id @default(autoincrement())
+  published Boolean @default(false)
+  title     String
+  User      User?   @relation(fields: [authorId], references: [id])
 }
